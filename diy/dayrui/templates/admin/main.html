@@ -1,0 +1,176 @@
+{template "nheader.html"}
+<script type="text/javascript">
+    $(function(){
+        $.getScript("{dr_url('home/mtotal')}");
+    });
+</script>
+
+<!-- BEGIN PAGE BAR -->
+<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <a href="{dr_url('home/main')}">{fc_lang('网站后台')}</a>
+            <i class="fa fa-circle"></i>
+        </li>
+        <li>
+            <a class="blue">{fc_lang('总览')}</a>
+        </li>
+    </ul>
+    <div class="page-toolbar">
+    </div>
+</div>
+<!-- END PAGE BAR -->
+
+<!-- BEGIN PAGE TITLE-->
+<h3 class="page-title">
+    <small></small>
+</h3>
+
+{if $ip}
+<div class="alert alert-block alert-danger fade in">
+    <button type="button" class="close" data-dismiss="alert"></button>
+    <p> {$ip} </p>
+</div>
+{/if}
+
+{if is_file(WEBPATH.'cache/install.data')}
+<div class="alert alert-block alert-danger fade in">
+    <a href="javascript:dr_confirm_clear_data();"> 一键清空安装时的初始化数据 </a>
+</div>
+<script type="text/javascript">
+    function dr_confirm_clear_data() {
+        var d = top.dialog({
+            title: lang["tips"],
+            fixed: true,
+            content: '<img src="/statics/js/skins/icons/question.png"> {fc_lang("您确定要清空安装时的初始化数据吗？")}',
+            okValue: "清空数据",
+            ok: function () {
+                $.ajax({type: "GET",dataType:"json", url: "{dr_url("home/clear_init")}",
+                    success: function(data) {
+                        dr_tips(data.code, 3, 2);
+                    },
+                    error: function(HttpRequest, ajaxOptions, thrownError) {
+                        alert(HttpRequest.responseText);
+                    }
+                });
+            },
+            cancelValue: "取消",
+            cancel: function () {
+                $.ajax({type: "GET",dataType:"json", url: "{dr_url("home/close_init")}",
+                    success: function(data) {
+                },
+                error: function(HttpRequest, ajaxOptions, thrownError) {
+                }
+            });
+            }
+        });
+        d.show();
+    }
+    </script>
+{/if}
+
+{template "main2.html"}
+
+{if $admin.usermenu}
+<div class="row margin-bottom-20">
+    <div class="col-md-12">
+        <div class="admin-usermenu">
+            {loop $admin.usermenu $t}
+            <a class="btn btn-default" href="{$t.url}"> {$t.name} </a>
+            {/loop}
+        </div>
+    </div>
+</div>
+{/if}
+
+<div class="row">
+    <div class="col-md-6 col-sm-6">
+        <div class="portlet light ">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cog font-red-sunglo" style="font-size: 20px;"></i>
+                    <span class="caption-subject font-red-sunglo">软件信息</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div>
+                    <table class="table table-light mtable">
+                        <tr>
+                            <td class="mleft" align="right">{fc_lang('官方网站')}：</td>
+                            <td>&nbsp;<a href="http://www.phpkaiyuancms.com" target="_blank">www.phpkaiyuancms.com</a></td>
+                        </tr>
+                        <tr>
+                            <td class="mleft" align="right">{fc_lang('程序版本')}：</td>
+                            <td>&nbsp;<a href="{dr_url('upgrade/index')}">POSCMS个人版&nbsp;v{DR_VERSION} bulid {str_replace('.','', DR_UPDATE)}</a></td>
+                        </tr>
+                        <tr>
+                            <td class="mleft" align="right">{fc_lang('用户论坛')}：</td>
+                            <td>&nbsp;<a href="http://www.wendacms.com/poscms/" target="_blank">http://www.wendacms.com/poscms/</a></td>
+                        </tr>
+                        <tr>
+                            <td class="mleft" align="right">{fc_lang('技术顾问')}：</td>
+                            <td>&nbsp;<a href="http://wpa.qq.com/msgrd?v=3&uin=1835011199&site=qq&menu=yes" target="_blank"> <i class="fa fa-qq"></i> 1835011199
+                            </a></td>
+                        </tr>
+                        <tr>
+                            <td class="mleft" align="right">{fc_lang('新手入门群')}：</td>
+                            <td>&nbsp;<a href="https://jq.qq.com/?_wv=1027&k=5S03XXR" target="_blank">点击链接加入群聊【POSCMS / CI框架开发者】</a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="portlet light ">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-volume-down font-blue-hoki" style="font-size: 20px;"></i>
+                    <span class="caption-subject font-blue-hoki">{fc_lang('使用协议')}</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <p>POSCMS个人版仅限于个人非商业用途，适合个人备案的网站</p>
+                <p>企业备案的网站请购买POSCMS商业版，本软件不能用于企业网站和以企业备案的网站</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-sm-6">
+        <div class="portlet light ">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-bar-chart font-green-sharp" style="font-size: 20px;"></i>
+                    <span class="caption-subject font-green-sharp  ">{fc_lang('数据统计')}</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div>
+                    <table class="table mtable table-nomargin table-bordered table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th style="text-align:center">{fc_lang('模块')}</th>
+                            <th style="text-align:center">{fc_lang('总数据')}</th>
+                            <th style="text-align:center">{fc_lang('今日')}</th>
+                            <th style="text-align:center">{fc_lang('审核')}</th>
+                            <th style="text-align:center">{fc_lang('扩展审核')}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {loop $mtotal $dir $t}
+                        <tr>
+                            <td style="text-align:center">{$t.name}</td>
+                            <td style="text-align:center"><a class="drlabel drlabel-success" href="{$t.content}" id="{$dir}_content"><img src="{THEME_PATH}admin/images/mloading.gif"></a></td>
+                            <td style="text-align:center"><a class="drlabel drlabel-success" href="{$t.today}" id="{$dir}_today"><img src="{THEME_PATH}admin/images/mloading.gif"></a></td>
+                            <td style="text-align:center"><a class="drlabel drlabel-important" href="{$t.content_verify}" id="{$dir}_content_verify"><img src="{THEME_PATH}admin/images/mloading.gif"></a></td>
+                            <td style="text-align:center"><a class="drlabel drlabel-important" href="{$t.extend_verify}" id="{$dir}_extend_verify"><img src="{THEME_PATH}admin/images/mloading.gif"></a></td>
+                        </tr>
+                        {/loop}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{template "nfooter.html"}
